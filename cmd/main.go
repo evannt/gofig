@@ -7,5 +7,9 @@ import (
 
 func main() {
 	fmt.Println("Hello GoFig(ure)")
-	fontparser.ParseFontFile("big")
+	big, err := fontparser.ParseFontFile("big")
+	if err != nil {
+		return
+	}
+	fmt.Println(big.Chars[int('a')])
 }
