@@ -1,15 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"github.com/evannt/gofig/internal/fontparser"
+	"github.com/evannt/gofig/internal/textrenderer"
 )
 
 func main() {
-	fmt.Println("Hello GoFig(ure)")
-	big, err := fontparser.ParseFontFile("big")
-	if err != nil {
-		return
-	}
-	fmt.Println(big.Chars[int('a')])
+	textrenderer.RenderText("larry 3d", "Hello From GoFig(ure)", 20, "blue")
 }

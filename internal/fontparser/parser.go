@@ -16,19 +16,21 @@ const asciiEndCode = 126
 
 type Font struct {
 	HardBlank      byte
+	EndMark        string
 	Height         int
 	Baseline       int
 	MaxLength      int
 	OldLayout      int
 	PrintDirection int
-	Chars          map[int]string
+	Chars          map[rune]string
 }
 
-func ParseFontFile(fileName string) (font Font, e error) {
+func ParseFontFile(fileName string) (font Font, err error) {
 	fmt.Printf("Loading font \"%s\"\n", fileName)
 	file, err := os.Open(fontFilePath + fileName + fileExtension)
-	if hasError(err) {
-		return font, e
+	if err != nil {
+		fmt.Printf("Font Not Supported: %s\n", fileName)
+		return font, err
 	}
 	defer file.Close()
 
@@ -60,17 +62,18 @@ func ParseFontFile(fileName string) (font Font, e error) {
 		lineNumber++
 	}
 
-	font.Chars = make(map[int]string)
 	// Parse lines with characters
+	replacer := strings.NewReplacer(string(font.HardBlank), " ")
+	font.Chars = make(map[rune]string)
 	for asciiCode := asciiStartCode; asciiCode <= asciiEndCode; asciiCode++ {
 		var builder strings.Builder
 		for range font.Height {
 			scanner.Scan()
-			line := scanner.Text()
+			line := replacer.Replace(scanner.Text())
 			builder.WriteString(line)
-
 		}
-		font.Chars[asciiCode] = builder.String()
+		asciiChar := builder.String()
+		font.Chars[rune(asciiCode)] = asciiChar[:len(asciiChar)-1]
 	}
 
 	// Parse Deutsch characters
@@ -79,16 +82,21 @@ func ParseFontFile(fileName string) (font Font, e error) {
 		var builder strings.Builder
 		for range font.Height {
 			scanner.Scan()
-			line := scanner.Text()
+			line := replacer.Replace(scanner.Text())
 			builder.WriteString(line)
 		}
-		font.Chars[ascii] = builder.String()
+		asciiChar := builder.String()
+		font.Chars[rune(ascii)] = asciiChar[:len(asciiChar)-1]
 	}
 
 	// Parse code tagged characters
 	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" {
+			continue
+		}
 		var builder strings.Builder
-		tagLine := strings.Split(scanner.Text(), "  ")
+		tagLine := strings.Split(line, "  ")
 		var tagCode int
 		if num, err := parseTagCode(tagLine[0]); !hasError(err) {
 			tagCode = num
@@ -97,15 +105,19 @@ func ParseFontFile(fileName string) (font Font, e error) {
 			}
 			for range font.Height {
 				scanner.Scan()
-				line := scanner.Text()
+				line := replacer.Replace(scanner.Text())
 				builder.WriteString(line)
 			}
-			font.Chars[tagCode] = builder.String()
+			asciiChar := builder.String()
+			font.Chars[rune(tagCode)] = asciiChar[:len(asciiChar)-1]
 		}
 	}
 
+	firstChar := font.Chars['!']
+	font.EndMark = string(firstChar[len(firstChar)-1])
+
 	if err := scanner.Err(); hasError(err) {
-		return font, e
+		return font, err
 	}
 	return font, nil
 }
