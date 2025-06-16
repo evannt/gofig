@@ -83,6 +83,23 @@ gofig -t "Welcome To GoFig(ure)" -f standard -w 120 -c blue
 ### List available fonts
 ```
 gofig -lf
+1row
+3-d
+3d diagonal
+3d-ascii
+3d
+3d_diagonal
+3x5
+4max
+5 line oblique
+5lineoblique
+acrobatic
+alligator
+alligator2
+alligator3
+alpha
+alphabet
+...
 ```
 
 ### List available colors
