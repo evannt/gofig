@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-const fontFilePath = "fonts/"
+const fontFilePath = "fonts"
 const fileExtension = ".flf"
 
 const asciiStartCode = 32
@@ -26,7 +26,7 @@ type Font struct {
 }
 
 func ParseFontFile(fileName string) (font Font, err error) {
-	file, err := assets.GetFontDir().Open(fontFilePath + fileName + fileExtension)
+	file, err := assets.GetFontDir().Open(fontFilePath + "/" + fileName + fileExtension)
 	if err != nil {
 		fmt.Printf("Font Not Supported: %s\n", fileName)
 		return font, err
