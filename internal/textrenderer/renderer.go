@@ -77,6 +77,19 @@ func RenderText(font string, text string, cols int, color string) {
 	}
 }
 
+func DisplaySupportedFonts() {
+	fonts := fontparser.GetFonts()
+	for _, f := range fonts {
+		fmt.Println(f)
+	}
+}
+
+func DisplaySupportedColors() {
+	for c := range colorMap {
+		fmt.Println(c)
+	}
+}
+
 func fitText(text string, cols int, font fontparser.Font) []string {
 	fittedText := []string{}
 	words := strings.SplitSeq(text, " ")

@@ -3,12 +3,12 @@ package fontparser
 import (
 	"bufio"
 	"fmt"
-	"os"
+	"github.com/evannt/gofig/assets"
 	"strconv"
 	"strings"
 )
 
-const fontFilePath = "assets/fonts/"
+const fontFilePath = "fonts/"
 const fileExtension = ".flf"
 
 const asciiStartCode = 32
@@ -26,8 +26,7 @@ type Font struct {
 }
 
 func ParseFontFile(fileName string) (font Font, err error) {
-	fmt.Printf("Loading font \"%s\"\n", fileName)
-	file, err := os.Open(fontFilePath + fileName + fileExtension)
+	file, err := assets.GetFontDir().Open(fontFilePath + fileName + fileExtension)
 	if err != nil {
 		fmt.Printf("Font Not Supported: %s\n", fileName)
 		return font, err
@@ -120,6 +119,22 @@ func ParseFontFile(fileName string) (font Font, err error) {
 		return font, err
 	}
 	return font, nil
+}
+
+func GetFonts() []string {
+	fonts := []string{}
+
+	files, err := assets.GetFontDir().ReadDir(fontFilePath)
+	if err != nil {
+		fmt.Println(err)
+		return fonts
+	}
+
+	for _, f := range files {
+		fonts = append(fonts, strings.Split(f.Name(), ".")[0])
+	}
+
+	return fonts
 }
 
 func parseHeader(header []string) []int {
