@@ -1,7 +1,6 @@
 # GoFig
 
-A CLI tool that displays inputted text as ASCII characters
-**GoFig** is a lightweight and fast CLI tool written in Go used to generate colorful ASCII art from the command line. Decorate your terminal banners, prompts, scripts, and README files!
+**GoFig** is a lightweight and fast CLI tool written in Go that converts inputted text into colorful ASCII art. Use it to decorate your terminal banners, prompts, scripts, or README files with style. Simple to use and highly customizable, GoFig brings flair to your command line in seconds.
 
 ## Features
 
